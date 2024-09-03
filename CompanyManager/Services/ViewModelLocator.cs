@@ -1,0 +1,11 @@
+﻿using CompanyManager.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
+
+namespace CompanyManager.Services
+{
+    public class ViewModelLocator(IServiceProvider serviceProvider)
+    {
+        public StartWindowVM StartWindowVM => serviceProvider.GetRequiredService<StartWindowVM>();
+        public EmployeeWindowVM EmployeeWindowVM => serviceProvider.GetRequiredService<EmployeeWindowVM>();
+    }
+}

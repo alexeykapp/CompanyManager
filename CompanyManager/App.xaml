@@ -9,7 +9,7 @@
             <view:StartWindow/>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:EmployeeWindowVM}">
-            <view:EmployeeWindowVM/>
+            <view:EmployeeWindow/>
         </DataTemplate>
     </Application.Resources>
 </Application>

@@ -1,5 +1,4 @@
-﻿using CompanyManager.ViewModel;
-using System.Windows;
+﻿using System.Windows;
 
 namespace CompanyManager.View
 {

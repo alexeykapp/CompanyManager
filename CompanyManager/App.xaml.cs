@@ -26,8 +26,8 @@ namespace CompanyManager
             ConfigureServices(serviceCollection, builder);
             serviceProvider = serviceCollection.BuildServiceProvider();
 
-            var startWindow = serviceProvider.GetRequiredService<StartWindow>();
-            startWindow.Show();
+            var windowManager = serviceProvider.GetRequiredService<IWindowManager>();
+            windowManager.ShowWindow(serviceProvider.GetRequiredService<StartWindowVM>());
             base.OnStartup(e);
         }
 
@@ -39,9 +39,14 @@ namespace CompanyManager
             {
                 DataContext = provider.GetRequiredService<StartWindowVM>()
             });
-            services.AddSingleton<INavigationService, NavigationServices>();
-            services.AddScoped<StartWindowVM>();
-            services.AddScoped<ViewModel.EmployeeWindowVM>();
+            services.AddSingleton<StartWindowVM>();
+            services.AddSingleton<EmployeeWindowVM>();
+
+            services.AddSingleton<ViewModelLocator>();
+            services.AddSingleton<WindowMapper>();
+            services.AddSingleton<IWindowManager, WindowManager>();
+            services.AddSingleton<IItemsService, ItemsService>();
+
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider => viewModelType => (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
         }
     }
