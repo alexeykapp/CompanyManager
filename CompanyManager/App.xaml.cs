@@ -1,4 +1,7 @@
-﻿using CompanyManager.Database;
+﻿using CompanyManager.Base;
+using CompanyManager.Database;
+using CompanyManager.Interfaces;
+using CompanyManager.Services;
 using CompanyManager.View;
 using CompanyManager.ViewModel;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +15,7 @@ namespace CompanyManager
     public partial class App : Application
     {
         private IServiceProvider serviceProvider;
-       
+
         protected override void OnStartup(StartupEventArgs e)
         {
             var builder = new ConfigurationBuilder()
@@ -25,14 +28,21 @@ namespace CompanyManager
 
             var startWindow = serviceProvider.GetRequiredService<StartWindow>();
             startWindow.Show();
+            base.OnStartup(e);
         }
 
         private void ConfigureServices(IServiceCollection services, IConfigurationRoot builder)
         {
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(builder.GetConnectionString("DefaultConnection")));
-            services.AddScoped<StartWindow>();
+            services.AddScoped<StartWindow>(provider => new StartWindow
+            {
+                DataContext = provider.GetRequiredService<StartWindowVM>()
+            });
+            services.AddSingleton<INavigationService, NavigationServices>();
             services.AddScoped<StartWindowVM>();
+            services.AddScoped<ViewModel.EmployeeWindowVM>();
+            services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider => viewModelType => (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
         }
     }
 }

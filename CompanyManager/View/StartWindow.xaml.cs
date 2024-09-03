@@ -5,10 +5,9 @@ namespace CompanyManager.View
 {
     public partial class StartWindow : Window
     {
-        public StartWindow(StartWindowVM startWindowVM)
+        public StartWindow()
         {
             InitializeComponent();
-            DataContext = startWindowVM;
         }
     }
 }

@@ -1,23 +1,26 @@
 ﻿using CompanyManager.Base;
-using CompanyManager.View;
-using Microsoft.Extensions.DependencyInjection;
+using CompanyManager.Interfaces;
 
 namespace CompanyManager.ViewModel
 {
     public class StartWindowVM : BaseViewModel
     {
         public RelayCommand NavigateEmployeesCommand { get; set; }
-        private IServiceProvider serviceProvider {  get; set; }
-        public StartWindowVM(IServiceProvider serviceProvider)
+        private INavigationService navigationService;
+        public INavigationService NavigationService
         {
-            this.serviceProvider = serviceProvider;
-            NavigateEmployeesCommand = new RelayCommand(NavigateEmployeesMethod);
+            get => navigationService;
+            set
+            {
+                navigationService = value;
+                OnPropertyChanged();
+            }
+        }
+        public StartWindowVM(INavigationService navigationService)
+        {
+            NavigationService = navigationService;
+            NavigateEmployeesCommand = new RelayCommand(o => { NavigationService.NavigateTo<EmployeeWindowVM>(); }, o => true);
         }
 
-        private void NavigateEmployeesMethod(object ob)
-        {
-            var employeeWindow = serviceProvider.GetRequiredService<EmployeeWindow>();
-            employeeWindow.Show();
-        }
     }
 }
