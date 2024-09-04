@@ -6,6 +6,8 @@
         xmlns:local="clr-namespace:CompanyManager.View" 
         xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterScreen"
         Title="Сотрудники" Height="450" Width="800">
 
     <i:Interaction.Triggers>
@@ -29,16 +31,28 @@
                 Width="150"
                 Height="30"
                 Command="{Binding Path=NavigateAddEmployeeCommand}"/>
-        <ListView Grid.Row="2">
+        <ListView Grid.Row="2"
+                  ItemsSource="{Binding Employees}">
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Фамилия" 
                                     Width="120" 
-                                    DisplayMemberBinding="{Binding }"/>
+                                    DisplayMemberBinding="{Binding LastName}"/>
                     <GridViewColumn Header="Имя" 
-                                    Width="120"/>
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding FirstName}"/>
                     <GridViewColumn Header="Отчество" 
-                                    Width="120"/>
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding MiddleName}"/>
+                    <GridViewColumn Header="Телефон" 
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding Phone}"/>
+                    <GridViewColumn Header="Паспорт" 
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding Passport}"/>
+                    <GridViewColumn Header="Адрес"
+                                    Width="120"
+                                    DisplayMemberBinding="{Binding Address}"/>
                 </GridView>
             </ListView.View>
         </ListView>

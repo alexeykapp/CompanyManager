@@ -43,6 +43,10 @@ namespace CompanyManager.Base
             {
                 await _execute(parameter);
             }
+            catch(Exception ex) 
+            {
+                throw new Exception(ex.Message);
+            }
             finally
             {
                 Interlocked.Exchange(ref isExecuting, 0);

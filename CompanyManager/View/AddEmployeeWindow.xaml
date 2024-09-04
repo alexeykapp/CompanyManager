@@ -8,53 +8,45 @@
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
         Title="Добавить сотрудника" Height="450" Width="400">
+    
     <Grid Background="Gray">
         <StackPanel HorizontalAlignment="Center"
                     Width="200">
             <Label Content="Фамилия"
                    Style="{StaticResource AddEmployeeLabel}"/>
             <TextBox 
-                Text="{Binding LastName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                Style="{StaticResource AddEmployeeTextBox}"
-                Validation.ErrorTemplate="{StaticResource ErrorTemplate}">
-                <TextBox.ToolTip>
-                    <Binding Path="LastName" StringFormat="{}{0}" />
-                </TextBox.ToolTip>
+                Text="{Binding LastName}"
+                Style="{StaticResource AddEmployeeTextBox}">
             </TextBox>
             <Label Content="Имя"
                    Style="{StaticResource AddEmployeeLabel}"/>
             <TextBox 
-                Text="{Binding FirstName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                Style="{StaticResource AddEmployeeTextBox}"
-                Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
+                Text="{Binding FirstName}"
+                Style="{StaticResource AddEmployeeTextBox}"/>
             <Label Content="Отчество"
                    Style="{StaticResource AddEmployeeLabel}"/>
             <TextBox 
-                Text="{Binding MiddleName, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                Style="{StaticResource AddEmployeeTextBox}"
-                Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
+                Text="{Binding MiddleName}"
+                Style="{StaticResource AddEmployeeTextBox}"/>
             <Label Content="Паспарт"
                    Style="{StaticResource AddEmployeeLabel}"/>
             <TextBox 
-                Text="{Binding Passport, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                Style="{StaticResource AddEmployeeTextBox}"
-                Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
+                Text="{Binding Passport}"
+                Style="{StaticResource AddEmployeeTextBox}"/>
             <Label Content="Телефон"
                    Style="{StaticResource AddEmployeeLabel}"/>
             <TextBox 
-                Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                Style="{StaticResource AddEmployeeTextBox}"
-                Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
+                Text="{Binding Phone}"
+                Style="{StaticResource AddEmployeeTextBox}"/>
             <Label Content="Адрес"
                    Style="{StaticResource AddEmployeeLabel}"/>
             <TextBox
-                Text="{Binding Address, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
-                Style="{StaticResource AddEmployeeTextBox}"
-                Validation.ErrorTemplate="{StaticResource ErrorTemplate}"/>
+                Text="{Binding Address}"
+                Style="{StaticResource AddEmployeeTextBox}"/>
             <Button Content="Добавить"
                     FontSize="16"
                     Margin="0,10,0,0"
-                    Command="{Binding AddCommand}"/>
+                    Command="{Binding AddEmployeeCommand}"/>
         </StackPanel>
     </Grid>
 </Window>

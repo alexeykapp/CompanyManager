@@ -1,139 +1,177 @@
 ﻿using CompanyManager.Base;
+using CompanyManager.Database;
 using CompanyManager.Repositories;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
+using System.Windows;
 
 namespace CompanyManager.ViewModel
 {
-    public class AddEmployeeVM : BaseViewModel, IDataErrorInfo
+    public class AddEmployeeVM : BaseViewModel
     {
         private EmployeeRepository employeeRepository;
-        private string? _lastName;
-        private string? _firstName;
-        private string? _middleName;
-        private string? _passport;
-        private string? _phone;
-        private string? _address;
+        private string? lastName;
+        private string? firstName;
+        private string? middleName;
+        private string? passport;
+        private string? phone;
+        private string? address;
         public AddEmployeeVM(EmployeeRepository employeeRepository)
         {
             this.employeeRepository = employeeRepository;
+            AddEmployeeCommand = new AsyncRelayCommand(_ => AddEmployeeAsync());
         }
-
+        public AsyncRelayCommand AddEmployeeCommand { get; set; }
         #region PROPERTIES
         public string LastName
         {
-            get => _lastName;
+            get => lastName;
             set
             {
-                if (_lastName != value)
+                if (lastName != value)
                 {
-                    _lastName = value;
+                    lastName = value;
                     OnPropertyChanged();
-                    ValidateProperty(nameof(LastName), value);
                 }
             }
         }
-
         public string FirstName
         {
-            get => _firstName;
+            get => firstName;
             set
             {
-                if (_firstName != value)
+                if (firstName != value)
                 {
-                    _firstName = value;
+                    firstName = value;
                     OnPropertyChanged();
-                    ValidateProperty(nameof(FirstName), value);
+
                 }
             }
         }
-
         public string MiddleName
         {
-            get => _middleName;
+            get => middleName;
             set
             {
-                if (_middleName != value)
+                if (middleName != value)
                 {
-                    _middleName = value;
+                    middleName = value;
                     OnPropertyChanged();
-                    ValidateProperty(nameof(MiddleName), value);
                 }
             }
         }
-
         public string Passport
         {
-            get => _passport;
+            get => passport;
             set
             {
-                if (_passport != value)
+                if (passport != value)
                 {
-                    _passport = value;
+                    passport = value;
                     OnPropertyChanged();
-                    ValidateProperty(nameof(Passport), value);
                 }
             }
         }
-
         public string Phone
         {
-            get => _phone;
+            get => phone;
             set
             {
-                if (_phone != value)
+                if (phone != value)
                 {
-                    _phone = value;
+                    phone = value;
                     OnPropertyChanged();
-                    ValidateProperty(nameof(Phone), value);
                 }
             }
         }
-
         public string Address
         {
-            get => _address;
+            get => address;
             set
             {
-                if (_address != value)
+                if (address != value)
                 {
-                    _address = value;
+                    address = value;
                     OnPropertyChanged();
-                    ValidateProperty(nameof(Address), value);
                 }
             }
         }
         #endregion
-
-        public string this[string columnName]
+        private async Task AddEmployeeAsync()
         {
-            get
+            if (!CanExecuteAddCommand())
+                return;
+            try
             {
-                switch (columnName)
-                {
-                    case nameof(LastName):
-                        return string.IsNullOrWhiteSpace(LastName) ? "Фамилия обязательна." : null!;
-                    case nameof(FirstName):
-                        return string.IsNullOrWhiteSpace(FirstName) ? "Имя обязательно." : null!;
-                    case nameof(MiddleName):
-                        return string.IsNullOrWhiteSpace(MiddleName) ? "Отчество обязательно." : null!;
-                    case nameof(Passport):
-                        return string.IsNullOrWhiteSpace(Passport) || !Regex.IsMatch(Passport, @"^\d{4}-\d{6}$") ? "Неверный формат паспорта." : null!;
-                    case nameof(Phone):
-                        return string.IsNullOrWhiteSpace(Phone) || !Regex.IsMatch(Phone, @"^\+?\d{10,15}$") ? "Неверный формат телефона." : null!;
-                    case nameof(Address):
-                        return string.IsNullOrWhiteSpace(Address) ? "Адрес обязателен." : null!;
-                    default:
-                        return null!;
-                }
+                await employeeRepository.Add(GetEmployee());
+                ClearProperties();
+                MessageBox.Show("Успешно");
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Произошла ошибка", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+            ClearProperties();
         }
-
-        public string Error => null!;
-
-        private void ValidateProperty(string propertyName, object value)
+        private bool CanExecuteAddCommand()
         {
-            OnPropertyChanged(propertyName);
+            if (string.IsNullOrWhiteSpace(LastName))
+            {
+                MessageBox.Show("Фамилия обязательна.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(FirstName))
+            {
+                MessageBox.Show("Имя обязательно.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(MiddleName))
+            {
+                MessageBox.Show("Отчество обязательно.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Passport) || !Regex.IsMatch(Passport, @"^\d{10}$"))
+            {
+                MessageBox.Show("Неверный формат паспорта. Используйте формат XXXX-XXXXXX (X - цифра).");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Phone) || !Regex.IsMatch(Phone, @"^\+?\d{10,15}$"))
+            {
+                MessageBox.Show("Неверный формат телефона. Используйте только цифры и знак '+' в начале.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Address))
+            {
+                MessageBox.Show("Адрес обязателен.");
+                return false;
+            }
+            return true;
+        }
+        private Employee GetEmployee()
+        {
+            Employee employee = new()
+            {
+                Address = Address,
+                FirstName = FirstName,
+                MiddleName = MiddleName,
+                LastName = LastName,
+                Passport = Passport,
+                Phone = Phone,
+            };
+            return employee;
+        }
+        private void ClearProperties()
+        {
+            Address = string.Empty;
+            FirstName = string.Empty;
+            MiddleName = string.Empty;
+            LastName = string.Empty;
+            Passport = string.Empty;
+            Phone = string.Empty;
         }
     }
 }

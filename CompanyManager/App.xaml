@@ -11,16 +11,7 @@
         </Style>
         <Style x:Key="AddEmployeeTextBox" TargetType="TextBox">
             <Setter Property="Height" Value="23"/>
+            <Setter Property="FontSize" Value="16"/>
         </Style>
-        <ControlTemplate x:Key="ErrorTemplate">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <TextBlock Foreground="Red" Text="{Binding ErrorContent}" Grid.Row="1" Margin="0,0,0,5"/>
-                <AdornedElementPlaceholder Grid.Row="0"/>
-            </Grid>
-        </ControlTemplate>
     </Application.Resources>
 </Application>
