@@ -12,12 +12,13 @@ namespace CompanyManager.Services
         {
             RegisterMapping<StartWindowVM, StartWindow>();
             RegisterMapping<EmployeeWindowVM, EmployeeWindow>();
+            RegisterMapping<AddEmployeeVM, AddEmployeeWindow>();
         }
         public void RegisterMapping<TViewModel, TWindow>() where TViewModel : BaseViewModel where TWindow : Window
         {
             _mappings[typeof(TViewModel)] = typeof(TWindow);
         }
-        public Type GetWindowTypeForViewModel(Type viewModelType)
+        public Type? GetWindowTypeForViewModel(Type viewModelType)
         {
             _mappings.TryGetValue(viewModelType, out var windowType);
             return windowType;

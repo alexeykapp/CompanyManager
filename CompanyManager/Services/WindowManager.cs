@@ -6,12 +6,9 @@ namespace CompanyManager.Services
 {
     public class WindowManager(WindowMapper windowMapper) : IWindowManager
     {
-        public void CloseWindow()
-        {
-            
-        }
+        private Window? previousWindow { get; set; }
 
-        public void ShowWindow(BaseViewModel viewModel)
+        public void ShowWindow(BaseViewModel viewModel, bool closePrevious = false)
         {
             var windowType = windowMapper.GetWindowTypeForViewModel(viewModel.GetType());
             if (windowType != null)
@@ -19,7 +16,20 @@ namespace CompanyManager.Services
                 var window = Activator.CreateInstance(windowType) as Window;
                 window.DataContext = viewModel;
                 window.Show();
+
+                if (closePrevious)
+                {
+                    previousWindow?.Close();
+                }
+
+                previousWindow = window;
             }
+        }
+
+        public void ClosePreviousWindow()
+        {
+            previousWindow?.Close();
+            previousWindow = null;
         }
     }
 }

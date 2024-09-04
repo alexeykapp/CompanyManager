@@ -3,10 +3,44 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:CompanyManager.View"
+        xmlns:local="clr-namespace:CompanyManager.View" 
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         mc:Ignorable="d"
-        Title="EmployeeWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="Сотрудники" Height="450" Width="800">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="ContentRendered">
+            <i:InvokeCommandAction Command="{Binding LoadDataCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Background="Gray">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Content="Сотрудники"
+               FontSize="23"
+               Foreground="White" 
+               FontWeight="Bold"/>
+        <Button Grid.Row ="1"
+                Content="Добавить сотрудника"
+                Width="150"
+                Height="30"
+                Command="{Binding Path=NavigateAddEmployeeCommand}"/>
+        <ListView Grid.Row="2">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn Header="Фамилия" 
+                                    Width="120" 
+                                    DisplayMemberBinding="{Binding }"/>
+                    <GridViewColumn Header="Имя" 
+                                    Width="120"/>
+                    <GridViewColumn Header="Отчество" 
+                                    Width="120"/>
+                </GridView>
+            </ListView.View>
+        </ListView>
     </Grid>
 </Window>

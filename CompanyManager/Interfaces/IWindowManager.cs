@@ -4,7 +4,7 @@ namespace CompanyManager.Interfaces
 {
     public interface IWindowManager
     {
-        void ShowWindow(BaseViewModel viewModel);
-        void CloseWindow();
+        void ShowWindow(BaseViewModel viewModel, bool closePrevious = false);
+        void ClosePreviousWindow();
     }
 }

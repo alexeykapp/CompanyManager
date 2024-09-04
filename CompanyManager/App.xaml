@@ -5,11 +5,22 @@
              xmlns:viewModel="clr-namespace:CompanyManager.ViewModel"
              xmlns:view="clr-namespace:CompanyManager.View">
     <Application.Resources>
-        <DataTemplate DataType="{x:Type viewModel:StartWindowVM}">
-            <view:StartWindow/>
-        </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModel:EmployeeWindowVM}">
-            <view:EmployeeWindow/>
-        </DataTemplate>
+        <Style x:Key="AddEmployeeLabel" TargetType="Label">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="18"/>
+        </Style>
+        <Style x:Key="AddEmployeeTextBox" TargetType="TextBox">
+            <Setter Property="Height" Value="23"/>
+        </Style>
+        <ControlTemplate x:Key="ErrorTemplate">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Foreground="Red" Text="{Binding ErrorContent}" Grid.Row="1" Margin="0,0,0,5"/>
+                <AdornedElementPlaceholder Grid.Row="0"/>
+            </Grid>
+        </ControlTemplate>
     </Application.Resources>
 </Application>

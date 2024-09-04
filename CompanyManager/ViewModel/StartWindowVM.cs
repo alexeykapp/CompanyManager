@@ -8,19 +8,14 @@ namespace CompanyManager.ViewModel
     {
         private readonly IWindowManager _windowManager;
         private readonly ViewModelLocator _viewLocator;
-
-        public IItemsService IItemsService { get; private set; }
         public RelayCommand NavigateEmployeesCommand { get; set; }
 
-        public StartWindowVM(IItemsService itemsService, IWindowManager windowManager, ViewModelLocator viewModelLocator)
+        public StartWindowVM(IWindowManager windowManager, ViewModelLocator viewModelLocator)
         {
             _windowManager = windowManager;
             _viewLocator = viewModelLocator;
-            IItemsService = itemsService;
 
-            IItemsService.SetData<EmployeeWindowVM>(1);
             NavigateEmployeesCommand = new RelayCommand(o => { _windowManager.ShowWindow(_viewLocator.EmployeeWindowVM); }, o => true);
         }
-
     }
 }

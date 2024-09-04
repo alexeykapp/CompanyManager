@@ -1,6 +1,7 @@
 ﻿using CompanyManager.Base;
 using CompanyManager.Database;
 using CompanyManager.Interfaces;
+using CompanyManager.Repositories;
 using CompanyManager.Services;
 using CompanyManager.View;
 using CompanyManager.ViewModel;
@@ -41,7 +42,8 @@ namespace CompanyManager
             });
             services.AddSingleton<StartWindowVM>();
             services.AddSingleton<EmployeeWindowVM>();
-
+            services.AddSingleton<AddEmployeeVM>();
+            services.AddSingleton<EmployeeRepository>();
             services.AddSingleton<ViewModelLocator>();
             services.AddSingleton<WindowMapper>();
             services.AddSingleton<IWindowManager, WindowManager>();
