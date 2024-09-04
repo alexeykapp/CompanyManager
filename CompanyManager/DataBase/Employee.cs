@@ -10,6 +10,8 @@ public partial class Employee
 
     public string? LastName { get; set; }
 
+    public DateOnly? DateOfBirth { get; set; }
+
     public string? Phone { get; set; }
 
     public string? Passport { get; set; }
@@ -17,6 +19,8 @@ public partial class Employee
     public string? Address { get; set; }
 
     public int? FkOrganization { get; set; }
+
+    public virtual ICollection<EmployeeRole> EmployeeRoles { get; set; } = new List<EmployeeRole>();
 
     public virtual Organization? FkOrganizationNavigation { get; set; }
 

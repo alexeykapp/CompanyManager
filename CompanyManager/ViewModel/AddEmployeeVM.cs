@@ -9,18 +9,24 @@ namespace CompanyManager.ViewModel
     public class AddEmployeeVM : BaseViewModel
     {
         private EmployeeRepository employeeRepository;
+        private RoleRepository roleRepository;
         private string? lastName;
         private string? firstName;
         private string? middleName;
         private string? passport;
         private string? phone;
         private string? address;
-        public AddEmployeeVM(EmployeeRepository employeeRepository)
+        private DateTime dateOfBirth;
+        private List<Role> roles;
+        public AddEmployeeVM(EmployeeRepository employeeRepository, RoleRepository roleRepository)
         {
+            this.roleRepository = roleRepository;
             this.employeeRepository = employeeRepository;
             AddEmployeeCommand = new AsyncRelayCommand(_ => AddEmployeeAsync());
+            LoadRolesCommand = new AsyncRelayCommand(_ => LoadRolesAsync());
         }
         public AsyncRelayCommand AddEmployeeCommand { get; set; }
+        public AsyncRelayCommand LoadRolesCommand { get; set; }
         #region PROPERTIES
         public string LastName
         {
@@ -55,6 +61,18 @@ namespace CompanyManager.ViewModel
                 if (middleName != value)
                 {
                     middleName = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        public DateTime DateOfBirth
+        {
+            get => dateOfBirth;
+            set
+            {
+                if (dateOfBirth != value)
+                {
+                    dateOfBirth = value;
                     OnPropertyChanged();
                 }
             }
@@ -95,6 +113,18 @@ namespace CompanyManager.ViewModel
                 }
             }
         }
+        public List<Role> Roles
+        {
+            get => roles;
+            set
+            {
+                if (roles != value)
+                {
+                    roles = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
         #endregion
         private async Task AddEmployeeAsync()
         {
@@ -102,7 +132,7 @@ namespace CompanyManager.ViewModel
                 return;
             try
             {
-                await employeeRepository.Add(GetEmployee());
+                await employeeRepository.AddAsync(GetEmployee());
                 ClearProperties();
                 MessageBox.Show("Успешно");
             }
@@ -159,6 +189,7 @@ namespace CompanyManager.ViewModel
                 FirstName = FirstName,
                 MiddleName = MiddleName,
                 LastName = LastName,
+                DateOfBirth = new DateOnly(DateOfBirth.Year, DateOfBirth.Month, DateOfBirth.Day),
                 Passport = Passport,
                 Phone = Phone,
             };
@@ -172,6 +203,10 @@ namespace CompanyManager.ViewModel
             LastName = string.Empty;
             Passport = string.Empty;
             Phone = string.Empty;
+        }
+        private async Task LoadRolesAsync()
+        {
+            Roles = await roleRepository.GetAsync();
         }
     }
 }

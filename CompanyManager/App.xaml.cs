@@ -15,7 +15,7 @@ namespace CompanyManager
 {
     public partial class App : Application
     {
-        private IServiceProvider serviceProvider;
+        private IServiceProvider? serviceProvider;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -44,6 +44,7 @@ namespace CompanyManager
             services.AddSingleton<EmployeeWindowVM>();
             services.AddSingleton<AddEmployeeVM>();
             services.AddSingleton<EmployeeRepository>();
+            services.AddSingleton<RoleRepository>();
             services.AddSingleton<ViewModelLocator>();
             services.AddSingleton<WindowMapper>();
             services.AddSingleton<IWindowManager, WindowManager>();

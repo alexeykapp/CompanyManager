@@ -3,11 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
         xmlns:local="clr-namespace:CompanyManager.View"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Title="Добавить сотрудника" Height="450" Width="400">
+        Title="Добавить сотрудника" Height="490" Width="400">
+    
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="ContentRendered">
+            <i:InvokeCommandAction Command="{Binding LoadRolesCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
     
     <Grid Background="Gray">
         <StackPanel HorizontalAlignment="Center"
@@ -28,11 +35,19 @@
             <TextBox 
                 Text="{Binding MiddleName}"
                 Style="{StaticResource AddEmployeeTextBox}"/>
-            <Label Content="Паспарт"
+            <Label Content="Дата рождения"
+                   Style="{StaticResource AddEmployeeLabel}"/>
+            <DatePicker SelectedDateFormat="Short"
+                        SelectedDate="{Binding DateOfBirth}"/>
+            <Label Content="Паспорт"
                    Style="{StaticResource AddEmployeeLabel}"/>
             <TextBox 
                 Text="{Binding Passport}"
                 Style="{StaticResource AddEmployeeTextBox}"/>
+            <Label Content="Должность"
+                   Style="{StaticResource AddEmployeeLabel}"/>
+            <ComboBox ItemsSource="{Binding Roles}"
+                      DisplayMemberPath="NameRole"/>
             <Label Content="Телефон"
                    Style="{StaticResource AddEmployeeLabel}"/>
             <TextBox 
@@ -44,7 +59,7 @@
                 Text="{Binding Address}"
                 Style="{StaticResource AddEmployeeTextBox}"/>
             <Button Content="Добавить"
-                    FontSize="16"
+                    FontSize="15"
                     Margin="0,10,0,0"
                     Command="{Binding AddEmployeeCommand}"/>
         </StackPanel>

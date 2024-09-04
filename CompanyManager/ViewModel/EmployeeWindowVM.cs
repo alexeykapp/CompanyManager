@@ -32,7 +32,7 @@ namespace CompanyManager.ViewModel
 
         private async Task LoadDataAsync()
         {
-            Employees = await employeeRepository.Get();
+            Employees = await employeeRepository.GetAsync();
         }
     }
 }

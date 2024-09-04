@@ -36,22 +36,25 @@
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Фамилия" 
-                                    Width="120" 
+                                    Width="100" 
                                     DisplayMemberBinding="{Binding LastName}"/>
                     <GridViewColumn Header="Имя" 
-                                    Width="120"
+                                    Width="100"
                                     DisplayMemberBinding="{Binding FirstName}"/>
                     <GridViewColumn Header="Отчество" 
-                                    Width="120"
+                                    Width="100"
                                     DisplayMemberBinding="{Binding MiddleName}"/>
+                    <GridViewColumn Header="Дата рождения"
+                                    Width="90"
+                                    DisplayMemberBinding="{Binding DateOfBirth}"/>
                     <GridViewColumn Header="Телефон" 
-                                    Width="120"
+                                    Width="100"
                                     DisplayMemberBinding="{Binding Phone}"/>
                     <GridViewColumn Header="Паспорт" 
-                                    Width="120"
+                                    Width="80"
                                     DisplayMemberBinding="{Binding Passport}"/>
                     <GridViewColumn Header="Адрес"
-                                    Width="120"
+                                    Width="130"
                                     DisplayMemberBinding="{Binding Address}"/>
                 </GridView>
             </ListView.View>
