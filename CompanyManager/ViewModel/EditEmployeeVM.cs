@@ -3,7 +3,7 @@ using CompanyManager.Converters;
 using CompanyManager.Database;
 using CompanyManager.DataBase.DisplayModel;
 using CompanyManager.Interfaces;
-using System.Collections.ObjectModel;
+using CompanyManager.Repositories;
 using System.IO;
 using System.Windows.Forms;
 using System.Windows.Media;
@@ -14,26 +14,35 @@ namespace CompanyManager.ViewModel
     public class EditEmployeeVM : BaseViewModel
     {
         private EmployeeDisplayModel employee;
+        private List<Role> roles;
         private IItemsService itemsService;
-        private Role selectedRole;
         private ByteImage byteImage;
-        public ObservableCollection<Role> Roles { get; set; }
-        public ObservableCollection<Role> SelectedRoles { get; set; }
+        private RoleRepository roleRepository;
+        private EmployeeRepository employeeRepository;
+        private PhotoRepository photoRepository;
 
-        public EditEmployeeVM(IItemsService itemsService, ByteImage byteImage)
+        public EditEmployeeVM(IItemsService itemsService, ByteImage byteImage, RoleRepository roleRepository, EmployeeRepository employeeRepository, PhotoRepository photoRepository)
         {
             this.itemsService = itemsService;
             this.byteImage = byteImage;
-            UploadPhotoCommand = new RelayCommand(_ => UploadPhoto());
+            this.roleRepository = roleRepository;
+            this.employeeRepository = employeeRepository;
+            this.photoRepository = photoRepository;
+            UploadPhotoCommand = new AsyncRelayCommand(_ => UploadPhotoAsync());
+            LoadDataCommand = new AsyncRelayCommand(_ => LoadDataAsync());
+            SaveChangesCommand = new AsyncRelayCommand(_ => SaveChangesAsync());
             employee = itemsService.GetData<EditEmployeeVM, EmployeeDisplayModel>();
             itemsService.ClearData<EditEmployeeVM>();
         }
-        public RelayCommand UploadPhotoCommand { get; set; }
-        public AsyncRelayCommand SaveEditCommand { get; set; }
+        #region COMMANDS
+        public AsyncRelayCommand UploadPhotoCommand { get; set; }
+        public AsyncRelayCommand SaveChangesCommand { get; set; }
+        public AsyncRelayCommand LoadDataCommand { get; set; }
+        #endregion
         #region PROPERTIES
         public string FirstName
         {
-            get => employee.FirstName;
+            get => employee.FirstName!;
             set
             {
                 if (employee.FirstName != value)
@@ -46,7 +55,7 @@ namespace CompanyManager.ViewModel
 
         public string LastName
         {
-            get => employee.LastName;
+            get => employee.LastName!;
             set
             {
                 if (employee.LastName != value)
@@ -59,7 +68,7 @@ namespace CompanyManager.ViewModel
 
         public string MiddleName
         {
-            get => employee.MiddleName;
+            get => employee.MiddleName!;
             set
             {
                 if (employee.MiddleName != value)
@@ -82,7 +91,7 @@ namespace CompanyManager.ViewModel
 
         public string Phone
         {
-            get => employee.Phone;
+            get => employee.Phone!;
             set
             {
                 if (employee.Phone != value)
@@ -95,7 +104,7 @@ namespace CompanyManager.ViewModel
 
         public string Passport
         {
-            get => employee.Passport;
+            get => employee.Passport!;
             set
             {
                 if (employee.Passport != value)
@@ -108,7 +117,7 @@ namespace CompanyManager.ViewModel
 
         public string Address
         {
-            get => employee.Address;
+            get => employee.Address!;
             set
             {
                 if (employee.Address != value)
@@ -119,27 +128,15 @@ namespace CompanyManager.ViewModel
             }
         }
 
-        public string RoleName
-        {
-            get => employee.RoleName;
-            set
-            {
-                if (employee.RoleName != value)
-                {
-                    employee.RoleName = value;
-                    OnPropertyChanged(nameof(RoleName));
-                }
-            }
-        }
         public Role SelectedRole
         {
-            get => selectedRole;
+            get => employee.Roles![0];
             set
             {
-                if (selectedRole != value)
+                if (employee.Roles![0] != value)
                 {
-                    selectedRole = value;
-                    OnPropertyChanged();
+                    employee.Roles![0] = value;
+                    OnPropertyChanged(nameof(SelectedRole));
                 }
             }
         }
@@ -155,8 +152,17 @@ namespace CompanyManager.ViewModel
                 return byteImage.ConvertByteArrayToBitmapImage(employee.Photo!);
             }
         }
+        public List<Role> Roles
+        {
+            get => roles;
+            set
+            {
+                roles = value;
+                OnPropertyChanged(nameof(Roles));
+            }
+        }
         #endregion
-        private void UploadPhoto()
+        private async Task UploadPhotoAsync()
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
             openFileDialog.Filter = "Image files (*.png;*.jpg)|*.png;*.jpg";
@@ -164,8 +170,21 @@ namespace CompanyManager.ViewModel
             {
                 var photoBytes = File.ReadAllBytes(openFileDialog.FileName);
                 employee.Photo = photoBytes;
+                await photoRepository.UpdatePhotoAsync(employee.IdEmployee, photoBytes);
                 OnPropertyChanged(nameof(Photo));
             }
         }
+        private async Task LoadDataAsync()
+        {
+            Roles = await roleRepository.GetAsync();
+            SelectedRole = Roles.FirstOrDefault(r => r.IdRole == employee.Roles![0].IdRole)!;
+            employee.Photo = (await photoRepository.GetPhotoEmployeeAsync(employee.IdEmployee))!.PhotoEmployee1;
+            OnPropertyChanged(nameof(Photo));
+        }
+        private async Task SaveChangesAsync()
+        {
+            await employeeRepository.UpdateEmployeeAsync(employee);
+        }
+
     }
 }

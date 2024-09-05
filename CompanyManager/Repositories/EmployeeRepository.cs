@@ -42,7 +42,7 @@ namespace CompanyManager.Repositories
                 Phone = e.Phone,
                 Passport = e.Passport,
                 Address = e.Address,
-                RoleName = string.Join(", ", e.EmployeeRoles.Select(er => er.FkRoleNavigation!.NameRole))
+                Roles = e.EmployeeRoles.Select(x => x.FkRoleNavigation).ToList()!,
             }).ToList();
 
             return employeeDisplayModels;
@@ -50,6 +50,7 @@ namespace CompanyManager.Repositories
         public async Task UpdateEmployeeAsync(EmployeeDisplayModel employeeModel)
         {
             var employee = await applicationContext.Employees
+                .AsNoTracking()
                 .Include(e => e.EmployeeRoles)
                 .FirstOrDefaultAsync(e => e.IdEmployee == employeeModel.IdEmployee);
 
@@ -62,13 +63,14 @@ namespace CompanyManager.Repositories
                 employee.Passport = employeeModel.Passport;
                 employee.Address = employeeModel.Address;
 
-                var role = await applicationContext.Roles.FirstOrDefaultAsync(r => r.NameRole == employeeModel.RoleName);
+                var role = await applicationContext.Roles.FirstOrDefaultAsync(r => r.NameRole == employeeModel.Roles!.LastOrDefault()!.NameRole);
                 if (role != null)
                 {
                     employee.EmployeeRoles.Clear();
                     employee.EmployeeRoles.Add(new EmployeeRole { FkRole = role.IdRole });
                 }
-
+               
+                applicationContext.Employees.Update(employee);
                 await applicationContext.SaveChangesAsync();
             }
         }

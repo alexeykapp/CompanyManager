@@ -50,6 +50,7 @@ namespace CompanyManager
             services.AddSingleton<ViewModelLocator>();
             services.AddSingleton<WindowMapper>();
             services.AddSingleton<ByteImage>();
+            services.AddSingleton<PhotoRepository>();
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IItemsService, ItemsService>();
 

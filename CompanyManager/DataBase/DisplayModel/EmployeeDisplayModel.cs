@@ -1,4 +1,6 @@
-﻿namespace CompanyManager.DataBase.DisplayModel
+﻿using CompanyManager.Database;
+
+namespace CompanyManager.DataBase.DisplayModel
 {
     public class EmployeeDisplayModel
     {
@@ -10,7 +12,7 @@
         public string? Phone { get; set; }
         public string? Passport { get; set; }
         public string? Address { get; set; }
-        public string? RoleName { get; set; }
+        public List<Role>? Roles { get; set; }
         public byte[]? Photo { get; set; }
     }
 }
