@@ -74,11 +74,11 @@ public partial class ApplicationContext : DbContext
             entity.Property(e => e.FkEmployee).HasColumnName("fk_employee");
             entity.Property(e => e.FkRole).HasColumnName("fk_role");
 
-            entity.HasOne(d => d.FkRoleNavigation).WithMany(p => p.EmployeeRoles)
-                .HasForeignKey(d => d.FkRole)
+            entity.HasOne(d => d.FkEmployeeNavigation).WithMany(p => p.EmployeeRoles)
+                .HasForeignKey(d => d.FkEmployee)
                 .HasConstraintName("FK_EmployeeRole_Employee");
 
-            entity.HasOne(d => d.FkRole1).WithMany(p => p.EmployeeRoles)
+            entity.HasOne(d => d.FkRoleNavigation).WithMany(p => p.EmployeeRoles)
                 .HasForeignKey(d => d.FkRole)
                 .HasConstraintName("FK_EmployeeRole_Roles");
         });

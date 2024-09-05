@@ -11,5 +11,6 @@
         public string? Passport { get; set; }
         public string? Address { get; set; }
         public string? RoleName { get; set; }
+        public byte[]? Photo { get; set; }
     }
 }

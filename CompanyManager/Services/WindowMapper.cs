@@ -13,6 +13,7 @@ namespace CompanyManager.Services
             RegisterMapping<StartWindowVM, StartWindow>();
             RegisterMapping<EmployeeWindowVM, EmployeeWindow>();
             RegisterMapping<AddEmployeeVM, AddEmployeeWindow>();
+            RegisterMapping<EditEmployeeVM, EditEmployeeWindow>();
         }
         public void RegisterMapping<TViewModel, TWindow>() where TViewModel : BaseViewModel where TWindow : Window
         {

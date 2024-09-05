@@ -1,5 +1,5 @@
 ﻿using CompanyManager.Base;
-using CompanyManager.Database;
+using CompanyManager.DataBase.DisplayModel;
 using CompanyManager.Interfaces;
 using CompanyManager.Repositories;
 using CompanyManager.Services;
@@ -10,8 +10,10 @@ namespace CompanyManager.ViewModel
     {
         private EmployeeRepository employeeRepository;
         private IWindowManager windowManager;
-        private List<Employee> employees;
-        public List<Employee> Employees
+        private ViewModelLocator viewModelLocator;
+        private IItemsService itemsService;
+        private List<EmployeeDisplayModel> employees;
+        public List<EmployeeDisplayModel> Employees
         {
             get => employees;
             set
@@ -22,17 +24,26 @@ namespace CompanyManager.ViewModel
         }
         public AsyncRelayCommand LoadDataCommand { get; set; }
         public RelayCommand NavigateAddEmployeeCommand { get; set; }
-        public EmployeeWindowVM(EmployeeRepository employeeRepository, IWindowManager windowManager, ViewModelLocator viewModelLocator)
+        public RelayCommand NavigateEditCommand { get; set; }
+        public EmployeeWindowVM(EmployeeRepository employeeRepository, IWindowManager windowManager, ViewModelLocator viewModelLocator, IItemsService itemsService)
         {
             this.employeeRepository = employeeRepository;
             this.windowManager = windowManager;
+            this.viewModelLocator = viewModelLocator;
+            this.itemsService = itemsService;
             LoadDataCommand = new AsyncRelayCommand(async _ => await LoadDataAsync());
             NavigateAddEmployeeCommand = new RelayCommand(o => { windowManager.ShowWindow(viewModelLocator.AddEmployeeVM); }, o => true);
+            NavigateEditCommand = new RelayCommand(obj => NavigateEdit((EmployeeDisplayModel)obj));
         }
 
         private async Task LoadDataAsync()
         {
-            Employees = await employeeRepository.GetAsync();
+            Employees = await employeeRepository.GetWithRolesAsync();
+        }
+        private void NavigateEdit(EmployeeDisplayModel employeeDisplayModel)
+        {
+            itemsService.SetData<EditEmployeeVM>(employeeDisplayModel);
+            windowManager.ShowWindow(viewModelLocator.EditEmployeeVM);
         }
     }
 }

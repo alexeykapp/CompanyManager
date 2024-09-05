@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CompanyManager.Database;
+﻿namespace CompanyManager.Database;
 
 public partial class PhotoEmployee
 {

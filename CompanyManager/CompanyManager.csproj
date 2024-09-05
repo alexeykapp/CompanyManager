@@ -10,12 +10,16 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Resources\NoPhoto.jpeg" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
+    <Resource Include="Resources\NoPhoto.jpeg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

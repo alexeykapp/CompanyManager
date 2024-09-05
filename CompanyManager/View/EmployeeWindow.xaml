@@ -22,37 +22,57 @@
             <RowDefinition Height="40"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
+
         <Label Content="Сотрудники"
                FontSize="23"
                Foreground="White" 
                FontWeight="Bold"/>
+
         <Button Grid.Row ="1"
                 Content="Добавить сотрудника"
                 Width="150"
                 Height="30"
                 Command="{Binding Path=NavigateAddEmployeeCommand}"/>
+
         <ListView Grid.Row="2"
                   ItemsSource="{Binding Employees}">
+
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseDoubleClick">
+                    <i:InvokeCommandAction Command="{Binding NavigateEditCommand}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource AncestorType=ListView}}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+
             <ListView.View>
                 <GridView>
                     <GridViewColumn Header="Фамилия" 
                                     Width="100" 
                                     DisplayMemberBinding="{Binding LastName}"/>
+
                     <GridViewColumn Header="Имя" 
                                     Width="100"
                                     DisplayMemberBinding="{Binding FirstName}"/>
+
                     <GridViewColumn Header="Отчество" 
                                     Width="100"
                                     DisplayMemberBinding="{Binding MiddleName}"/>
+
                     <GridViewColumn Header="Дата рождения"
                                     Width="90"
                                     DisplayMemberBinding="{Binding DateOfBirth}"/>
+
                     <GridViewColumn Header="Телефон" 
                                     Width="100"
                                     DisplayMemberBinding="{Binding Phone}"/>
+
+                    <GridViewColumn Header="Должности"
+                                    Width="90"
+                                    DisplayMemberBinding="{Binding RoleName}"/>
+
                     <GridViewColumn Header="Паспорт" 
                                     Width="80"
                                     DisplayMemberBinding="{Binding Passport}"/>
+
                     <GridViewColumn Header="Адрес"
                                     Width="130"
                                     DisplayMemberBinding="{Binding Address}"/>

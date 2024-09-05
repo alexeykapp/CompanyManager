@@ -17,7 +17,7 @@ namespace CompanyManager.Services
             {
                 return (T)data;
             }
-            return default;
+            throw new Exception("There is no such data in the repository");
         }
 
         public void SetData<TViewModel>(object data)

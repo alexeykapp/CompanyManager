@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace CompanyManager.Database;
+﻿namespace CompanyManager.Database;
 
 public partial class EmployeeRole
 {
@@ -11,7 +8,7 @@ public partial class EmployeeRole
 
     public int? FkEmployee { get; set; }
 
-    public virtual Role? FkRole1 { get; set; }
+    public virtual Employee? FkEmployeeNavigation { get; set; }
 
-    public virtual Employee? FkRoleNavigation { get; set; }
+    public virtual Role? FkRoleNavigation { get; set; }
 }

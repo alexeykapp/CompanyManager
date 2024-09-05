@@ -8,5 +8,6 @@ namespace CompanyManager.Services
         public StartWindowVM StartWindowVM => serviceProvider.GetRequiredService<StartWindowVM>();
         public EmployeeWindowVM EmployeeWindowVM => serviceProvider.GetRequiredService<EmployeeWindowVM>();
         public AddEmployeeVM AddEmployeeVM => serviceProvider.GetRequiredService<AddEmployeeVM>();
+        public EditEmployeeVM EditEmployeeVM => serviceProvider.GetRequiredService<EditEmployeeVM>();
     }
 }
