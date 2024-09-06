@@ -178,8 +178,12 @@ namespace CompanyManager.ViewModel
         {
             Roles = await roleRepository.GetAsync();
             SelectedRole = Roles.FirstOrDefault(r => r.IdRole == employee.Roles![0].IdRole)!;
-            employee.Photo = (await photoRepository.GetPhotoEmployeeAsync(employee.IdEmployee))!.PhotoEmployee1;
-            OnPropertyChanged(nameof(Photo));
+            var employeePhoto = await photoRepository.GetPhotoEmployeeAsync(employee.IdEmployee);
+            if (employeePhoto != null)
+            {
+                employee.Photo = employeePhoto!.PhotoEmployee1;
+                OnPropertyChanged(nameof(Photo));
+            }
         }
         private async Task SaveChangesAsync()
         {

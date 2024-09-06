@@ -26,26 +26,22 @@ namespace CompanyManager.Repositories
         }
         public async Task<List<EmployeeDisplayModel>> GetWithRolesAsync()
         {
-            var employees = await applicationContext.Employees
-                .AsNoTracking()
-                .Include(e => e.EmployeeRoles)
-                .ThenInclude(er => er.FkRoleNavigation)
-                .ToListAsync();
-
-            var employeeDisplayModels = employees.Select(e => new EmployeeDisplayModel
-            {
-                IdEmployee = e.IdEmployee,
-                FirstName = e.FirstName,
-                MiddleName = e.MiddleName,
-                LastName = e.LastName,
-                DateOfBirth = e.DateOfBirth,
-                Phone = e.Phone,
-                Passport = e.Passport,
-                Address = e.Address,
-                Roles = e.EmployeeRoles.Select(x => x.FkRoleNavigation).ToList()!,
-            }).ToList();
-
-            return employeeDisplayModels;
+            return await applicationContext.Employees
+                 .AsNoTracking()
+                 .Include(e => e.EmployeeRoles)
+                 .ThenInclude(er => er.FkRoleNavigation)
+                 .Select(e => new EmployeeDisplayModel
+                 {
+                     IdEmployee = e.IdEmployee,
+                     FirstName = e.FirstName,
+                     MiddleName = e.MiddleName,
+                     LastName = e.LastName,
+                     DateOfBirth = e.DateOfBirth,
+                     Phone = e.Phone,
+                     Passport = e.Passport,
+                     Address = e.Address,
+                     Roles = e.EmployeeRoles.Select(x => x.FkRoleNavigation).ToList()!
+                 }).ToListAsync();
         }
         public async Task UpdateEmployeeAsync(EmployeeDisplayModel employeeModel)
         {
@@ -63,13 +59,15 @@ namespace CompanyManager.Repositories
                 employee.Passport = employeeModel.Passport;
                 employee.Address = employeeModel.Address;
 
-                var role = await applicationContext.Roles.FirstOrDefaultAsync(r => r.NameRole == employeeModel.Roles!.LastOrDefault()!.NameRole);
+                var role = await applicationContext.Roles
+                    .AsNoTracking()
+                    .FirstOrDefaultAsync(r => r.NameRole == employeeModel.Roles!.LastOrDefault()!.NameRole);
                 if (role != null)
                 {
                     employee.EmployeeRoles.Clear();
                     employee.EmployeeRoles.Add(new EmployeeRole { FkRole = role.IdRole });
                 }
-               
+
                 applicationContext.Employees.Update(employee);
                 await applicationContext.SaveChangesAsync();
             }

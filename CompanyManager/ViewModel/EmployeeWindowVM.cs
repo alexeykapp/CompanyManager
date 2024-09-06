@@ -31,6 +31,7 @@ namespace CompanyManager.ViewModel
             this.windowManager = windowManager;
             this.viewModelLocator = viewModelLocator;
             this.itemsService = itemsService;
+
             LoadDataCommand = new AsyncRelayCommand(async _ => await LoadDataAsync());
             NavigateAddEmployeeCommand = new RelayCommand(o => { windowManager.ShowWindow(viewModelLocator.AddEmployeeVM); }, o => true);
             NavigateEditCommand = new RelayCommand(obj => NavigateEdit((EmployeeDisplayModel)obj));

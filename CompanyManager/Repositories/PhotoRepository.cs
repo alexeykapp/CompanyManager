@@ -5,26 +5,32 @@ namespace CompanyManager.Repositories
 {
     public class PhotoRepository(ApplicationContext applicationContext)
     {
-        public async Task<PhotoEmployee?> GetPhotoEmployeeAsync(int idEmployee)
+        public async Task<PhotoEmployee?> GetPhotoEmployeeAsync(int employeeId)
         {
             return await applicationContext.PhotoEmployees
-                .AsNoTracking()
-                .FirstOrDefaultAsync(p => p.FkEmployee == idEmployee);
+                .FirstOrDefaultAsync(p => p.FkEmployee == employeeId);
         }
-        public async Task UpdatePhotoAsync(int idEmployee, byte[] bytes)
+
+        public async Task UpdatePhotoAsync(int employeeId, byte[] photoBytes)
         {
             var photo = await applicationContext.PhotoEmployees
-                .AsNoTracking()
-                .FirstOrDefaultAsync(pe => pe.FkEmployee == idEmployee);
+                .FirstOrDefaultAsync(pe => pe.FkEmployee == employeeId);
+
             if (photo != null)
             {
-                photo.PhotoEmployee1 = bytes;
-                applicationContext.Update(photo);
+                photo.PhotoEmployee1 = photoBytes;
             }
             else
             {
-                await applicationContext.PhotoEmployees.AddAsync(new PhotoEmployee { PhotoEmployee1 = bytes, FkEmployee = idEmployee });
+                photo = new PhotoEmployee
+                {
+                    PhotoEmployee1 = photoBytes,
+                    FkEmployee = employeeId
+                };
+
+                applicationContext.PhotoEmployees.Add(photo);
             }
+
             await applicationContext.SaveChangesAsync();
         }
     }
