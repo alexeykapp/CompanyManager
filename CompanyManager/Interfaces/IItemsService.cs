@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace CompanyManager.Interfaces
+﻿namespace CompanyManager.Interfaces
 {
     public interface IItemsService
     {

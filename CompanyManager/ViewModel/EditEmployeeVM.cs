@@ -13,13 +13,13 @@ namespace CompanyManager.ViewModel
 {
     public class EditEmployeeVM : BaseViewModel
     {
+        private readonly IItemsService itemsService;
+        private readonly ByteImage byteImage;
+        private readonly RoleRepository roleRepository;
+        private readonly EmployeeRepository employeeRepository;
+        private readonly PhotoRepository photoRepository;
         private EmployeeDisplayModel employee;
         private List<Role> roles;
-        private IItemsService itemsService;
-        private ByteImage byteImage;
-        private RoleRepository roleRepository;
-        private EmployeeRepository employeeRepository;
-        private PhotoRepository photoRepository;
 
         public EditEmployeeVM(IItemsService itemsService, ByteImage byteImage, RoleRepository roleRepository, EmployeeRepository employeeRepository, PhotoRepository photoRepository)
         {
