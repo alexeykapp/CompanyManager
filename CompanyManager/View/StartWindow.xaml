@@ -11,6 +11,12 @@
     <Grid Background="Gray">
         <StackPanel HorizontalAlignment="Center"
                     VerticalAlignment="Center">
+            <Label Content="Добро пожаловать!"
+                   HorizontalAlignment="Center"
+                   FontSize="20"
+                   Foreground="White"
+                   Margin="0,0,0,30" 
+                   FontWeight="Bold"/>
             <Button Content="Организации"
                     FontSize="20"
                     Margin="10"/>

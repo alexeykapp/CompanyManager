@@ -25,6 +25,7 @@ namespace CompanyManager.ViewModel
         public AsyncRelayCommand LoadDataCommand { get; set; }
         public RelayCommand NavigateAddEmployeeCommand { get; set; }
         public RelayCommand NavigateEditCommand { get; set; }
+        public RelayCommand NavigateStartCommand { get; set; }
         public EmployeeWindowVM(EmployeeRepository employeeRepository, IWindowManager windowManager, ViewModelLocator viewModelLocator, IItemsService itemsService)
         {
             this.employeeRepository = employeeRepository;
@@ -35,6 +36,7 @@ namespace CompanyManager.ViewModel
             LoadDataCommand = new AsyncRelayCommand(async _ => await LoadDataAsync());
             NavigateAddEmployeeCommand = new RelayCommand(o => { windowManager.ShowWindow(viewModelLocator.AddEmployeeVM); }, o => true);
             NavigateEditCommand = new RelayCommand(obj => NavigateEdit((EmployeeDisplayModel)obj));
+            NavigateStartCommand = new RelayCommand(o => { windowManager.ShowWindow(viewModelLocator.StartWindowVM, true); }, o => true);
         }
 
         private async Task LoadDataAsync()

@@ -15,7 +15,10 @@ namespace CompanyManager.ViewModel
             _windowManager = windowManager;
             _viewLocator = viewModelLocator;
 
-            NavigateEmployeesCommand = new RelayCommand(o => { _windowManager.ShowWindow(_viewLocator.EmployeeWindowVM); }, o => true);
+            NavigateEmployeesCommand = new RelayCommand(o =>
+            {
+                _windowManager.ShowWindow(_viewLocator.EmployeeWindowVM, true);
+            }, o => true);
         }
     }
 }

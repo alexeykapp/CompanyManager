@@ -1,35 +1,57 @@
 ﻿using CompanyManager.Base;
 using CompanyManager.Interfaces;
+using System.ComponentModel;
 using System.Windows;
 
 namespace CompanyManager.Services
 {
     public class WindowManager(WindowMapper windowMapper) : IWindowManager
     {
-        private Window? previousWindow { get; set; }
-
-        public void ShowWindow(BaseViewModel viewModel, bool closePrevious = false)
+        private Stack<Window>? windows = new();
+        public void ShowWindow(BaseViewModel viewModel, bool closeCurrent = false)
         {
             var windowType = windowMapper.GetWindowTypeForViewModel(viewModel.GetType());
             if (windowType != null)
             {
                 var window = Activator.CreateInstance(windowType) as Window;
-                window.DataContext = viewModel;
-                window.Show();
+                window!.DataContext = viewModel;
+                window.Closing += WindowClosing;
 
-                if (closePrevious)
+                if (closeCurrent)
                 {
-                    previousWindow?.Close();
+                    CloseCurrentWindow();
                 }
 
-                previousWindow = window;
+                window.Show();
+                if (windows!.Count >= 1)
+                {
+                    windows.First().IsEnabled = false;
+                }
+                windows!.Push(window);
             }
         }
 
-        public void ClosePreviousWindow()
+        public void CloseCurrentWindow()
         {
-            previousWindow?.Close();
-            previousWindow = null;
+            windows?.First().Close();
+            windows?.Pop();
+        }
+        private void WindowClosing(object? sender, CancelEventArgs e)
+        {
+            if (windows!.Count > 1)
+            {
+                var window = sender as Window;
+                var typeClosingWindow = window!.GetType();
+                if (typeClosingWindow != windows.First().GetType())
+                {
+                    e.Cancel = true;
+                }
+                else
+                {
+                    windows.Pop();
+                    windows.First().IsEnabled = true;
+                }
+            }
         }
     }
 }
