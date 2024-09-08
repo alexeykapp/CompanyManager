@@ -2,7 +2,7 @@
 
 namespace CompanyManager.Services
 {
-    public class ItemsService : IItemsService
+    public class ViewModelDataService : IViewModelDataService
     {
         private readonly Dictionary<Type, object> _data = new();
 

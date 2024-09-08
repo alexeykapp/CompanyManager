@@ -1,6 +1,6 @@
 ﻿namespace CompanyManager.Interfaces
 {
-    public interface IItemsService
+    public interface IViewModelDataService
     {
         void SetData<TViewModel>(object data);
         T GetData<TViewModel, T>();

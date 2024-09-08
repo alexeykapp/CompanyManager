@@ -57,6 +57,12 @@
                 FontSize="15"
                 Height="30"
                 Command="{Binding CancelFilteringCommand}"/>
+            <Button
+                Content="🔄"
+                Height="30"
+                Margin="10,0,0,0"
+                FontSize="17"
+                Command="{Binding LoadDataCommand}"/>
             <Button 
                 Content="➕Добавить сотрудника"
                 Width="150"

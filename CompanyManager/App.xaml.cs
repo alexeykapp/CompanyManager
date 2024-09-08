@@ -53,7 +53,7 @@ namespace CompanyManager
             services.AddSingleton<PhotoRepository>();
             services.AddSingleton<EmployeeFilter>();
             services.AddSingleton<IWindowManager, WindowManager>();
-            services.AddSingleton<IItemsService, ItemsService>();
+            services.AddSingleton<IViewModelDataService, ViewModelDataService>();
 
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider => viewModelType => (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
         }

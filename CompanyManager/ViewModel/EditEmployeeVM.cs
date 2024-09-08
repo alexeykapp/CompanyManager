@@ -13,7 +13,7 @@ namespace CompanyManager.ViewModel
 {
     public class EditEmployeeVM : BaseViewModel
     {
-        private readonly IItemsService itemsService;
+        private readonly IViewModelDataService viewModelData;
         private readonly ByteImage byteImage;
         private readonly RoleRepository roleRepository;
         private readonly EmployeeRepository employeeRepository;
@@ -21,9 +21,9 @@ namespace CompanyManager.ViewModel
         private EmployeeDisplayModel employee;
         private List<Role> roles;
 
-        public EditEmployeeVM(IItemsService itemsService, ByteImage byteImage, RoleRepository roleRepository, EmployeeRepository employeeRepository, PhotoRepository photoRepository)
+        public EditEmployeeVM(IViewModelDataService viewModelData, ByteImage byteImage, RoleRepository roleRepository, EmployeeRepository employeeRepository, PhotoRepository photoRepository)
         {
-            this.itemsService = itemsService;
+            this.viewModelData = viewModelData;
             this.byteImage = byteImage;
             this.roleRepository = roleRepository;
             this.employeeRepository = employeeRepository;
@@ -31,8 +31,8 @@ namespace CompanyManager.ViewModel
             UploadPhotoCommand = new AsyncRelayCommand(_ => UploadPhotoAsync());
             LoadDataCommand = new AsyncRelayCommand(_ => LoadDataAsync());
             SaveChangesCommand = new AsyncRelayCommand(_ => SaveChangesAsync());
-            employee = itemsService.GetData<EditEmployeeVM, EmployeeDisplayModel>();
-            itemsService.ClearData<EditEmployeeVM>();
+            employee = this.viewModelData.GetData<EditEmployeeVM, EmployeeDisplayModel>();
+            this.viewModelData.ClearData<EditEmployeeVM>();
         }
         #region COMMANDS
         public AsyncRelayCommand UploadPhotoCommand { get; set; }
