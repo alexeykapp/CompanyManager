@@ -51,6 +51,7 @@ namespace CompanyManager
             services.AddSingleton<WindowMapper>();
             services.AddSingleton<ByteImage>();
             services.AddSingleton<PhotoRepository>();
+            services.AddSingleton<EmployeeFilter>();
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IItemsService, ItemsService>();
 

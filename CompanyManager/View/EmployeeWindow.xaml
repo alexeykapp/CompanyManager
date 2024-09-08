@@ -36,14 +36,38 @@
                FontWeight="Bold"/>
         </StackPanel>
 
-        <Button Grid.Row ="1"
-                Content="Добавить сотрудника"
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Label Content="Поиск"
+                   Foreground="White"
+                   FontSize="15"
+                   FontWeight="Bold"
+                   VerticalAlignment="Center"/>
+            <TextBox
+                Text="{Binding TextSearch}"
+                FontSize="17"
+                Height="30"
+                Width="250"/>
+            <Button
+                Content="🔍"
+                FontSize="15"
+                Height="30"
+                Command="{Binding FilteringEmployeesCommand}"/>
+            <Button 
+                Content="❌"
+                FontSize="15"
+                Height="30"
+                Command="{Binding CancelFilteringCommand}"/>
+            <Button 
+                Content="➕Добавить сотрудника"
                 Width="150"
                 Height="30"
+                Margin="20,0,0,0"
                 Command="{Binding Path=NavigateAddEmployeeCommand}"/>
+        </StackPanel>
+
 
         <ListView Grid.Row="2"
-                  ItemsSource="{Binding Employees}">
+                  ItemsSource="{Binding FilteringEmployees}">
 
             <i:Interaction.Triggers>
                 <i:EventTrigger EventName="MouseDoubleClick">
