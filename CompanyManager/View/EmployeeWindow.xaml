@@ -68,7 +68,7 @@
                 Width="150"
                 Height="30"
                 Margin="20,0,0,0"
-                Command="{Binding Path=NavigateAddEmployeeCommand}"/>
+                Command="{Binding Path=NavigateEditCommand}"/>
         </StackPanel>
 
 

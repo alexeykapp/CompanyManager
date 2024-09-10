@@ -4,7 +4,9 @@ using CompanyManager.Database;
 using CompanyManager.DataBase.DisplayModel;
 using CompanyManager.Interfaces;
 using CompanyManager.Repositories;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -18,21 +20,30 @@ namespace CompanyManager.ViewModel
         private readonly RoleRepository roleRepository;
         private readonly EmployeeRepository employeeRepository;
         private readonly PhotoRepository photoRepository;
+        private readonly EmployeeDisplayModelConverter employeeConverter;
         private EmployeeDisplayModel employee;
         private List<Role> roles;
 
-        public EditEmployeeVM(IViewModelDataService viewModelData, ByteImage byteImage, RoleRepository roleRepository, EmployeeRepository employeeRepository, PhotoRepository photoRepository)
+        public EditEmployeeVM(IViewModelDataService viewModelData, ByteImage byteImage, RoleRepository roleRepository, EmployeeRepository employeeRepository, PhotoRepository photoRepository, EmployeeDisplayModelConverter employeeConverter)
         {
             this.viewModelData = viewModelData;
             this.byteImage = byteImage;
             this.roleRepository = roleRepository;
             this.employeeRepository = employeeRepository;
             this.photoRepository = photoRepository;
+            this.employeeConverter = employeeConverter;
             UploadPhotoCommand = new AsyncRelayCommand(_ => UploadPhotoAsync());
             LoadDataCommand = new AsyncRelayCommand(_ => LoadDataAsync());
             SaveChangesCommand = new AsyncRelayCommand(_ => SaveChangesAsync());
             employee = this.viewModelData.GetData<EditEmployeeVM, EmployeeDisplayModel>();
             this.viewModelData.ClearData<EditEmployeeVM>();
+            if (employee == null)
+            {
+                employee = new EmployeeDisplayModel
+                {
+                    Roles = new List<Role>()
+                };
+            }
         }
         #region COMMANDS
         public AsyncRelayCommand UploadPhotoCommand { get; set; }
@@ -81,7 +92,14 @@ namespace CompanyManager.ViewModel
 
         public DateTime? DateOfBirth
         {
-            get => employee.DateOfBirth!.Value.ToDateTime(TimeOnly.MinValue);
+            get
+            {
+                if (employee.DateOfBirth == null)
+                {
+                    return DateTime.Today;
+                }
+                return employee.DateOfBirth!.Value.ToDateTime(TimeOnly.MinValue);
+            }
             set
             {
                 employee.DateOfBirth = DateOnly.FromDateTime((DateTime)value!);
@@ -130,14 +148,25 @@ namespace CompanyManager.ViewModel
 
         public Role SelectedRole
         {
-            get => employee.Roles![0];
+            get
+            {
+                if (employee.Roles!.Count == 0)
+                {
+                    return null!;
+                }
+                return employee.Roles![0];
+            }
             set
             {
-                if (employee.Roles![0] != value)
+                if (employee.Roles!.Count == 0)
+                {
+                    employee.Roles.Add(value);
+                }
+                else
                 {
                     employee.Roles![0] = value;
-                    OnPropertyChanged(nameof(SelectedRole));
                 }
+                OnPropertyChanged(nameof(SelectedRole));
             }
         }
         public ImageSource Photo
@@ -161,6 +190,8 @@ namespace CompanyManager.ViewModel
                 OnPropertyChanged(nameof(Roles));
             }
         }
+        public string WindowTitle => employee.IdEmployee == 0 ? "Добавить сотрудника" : "Редактировать сотрудника";
+
         #endregion
         private async Task UploadPhotoAsync()
         {
@@ -170,15 +201,16 @@ namespace CompanyManager.ViewModel
             {
                 var photoBytes = File.ReadAllBytes(openFileDialog.FileName);
                 employee.Photo = photoBytes;
-                await photoRepository.UpdatePhotoAsync(employee.IdEmployee, photoBytes);
+                //await photoRepository.UpdatePhotoAsync(employee.IdEmployee, photoBytes);
                 OnPropertyChanged(nameof(Photo));
             }
         }
         private async Task LoadDataAsync()
         {
             Roles = await roleRepository.GetAsync();
-            SelectedRole = Roles.FirstOrDefault(r => r.IdRole == employee.Roles![0].IdRole)!;
-            var employeePhoto = await photoRepository.GetPhotoEmployeeAsync(employee.IdEmployee);
+            if (employee.Roles != null)
+                SelectedRole = Roles.FirstOrDefault(r => r.IdRole == employee.Roles![0].IdRole)!;
+            var employeePhoto = await photoRepository.GetPhotoEmployeeAsync(employee!.IdEmployee);
             if (employeePhoto != null)
             {
                 employee.Photo = employeePhoto!.PhotoEmployee1;
@@ -187,8 +219,67 @@ namespace CompanyManager.ViewModel
         }
         private async Task SaveChangesAsync()
         {
-            await employeeRepository.UpdateEmployeeAsync(employee);
+            if (employee.IdEmployee == 0)
+            {
+                var employeeNew = employeeConverter.ConvertToEmployee(employee);
+                await employeeRepository.AddAsync(employeeNew);
+                await photoRepository.UpdatePhotoAsync(employeeNew.IdEmployee, employee.Photo!);
+                await roleRepository.AddRoleToEmployee(Roles, employeeNew);
+            }
+            else
+            {
+                await employeeRepository.UpdateEmployeeAsync(employee);
+            }
         }
+        private bool Validate()
+        {
+            if (string.IsNullOrWhiteSpace(LastName))
+            {
+                MessageBox.Show("Фамилия обязательна.");
+                return false;
+            }
 
+            if (string.IsNullOrWhiteSpace(FirstName))
+            {
+                MessageBox.Show("Имя обязательно.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(MiddleName))
+            {
+                MessageBox.Show("Отчество обязательно.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Passport) || !Regex.IsMatch(Passport, @"^\d{10}$"))
+            {
+                MessageBox.Show("Неверный формат паспорта. Используйте формат XXXX-XXXXXX (X - цифра).");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Phone) || !Regex.IsMatch(Phone, @"^\+?\d{10,15}$"))
+            {
+                MessageBox.Show("Неверный формат телефона. Используйте только цифры и знак '+' в начале.");
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(Address))
+            {
+                MessageBox.Show("Адрес обязателен.");
+                return false;
+            }
+
+            if (!DateOfBirth.HasValue)
+            {
+                MessageBox.Show("Дата рождения обязательна.");
+                return false;
+            }
+            if (employee.Roles!.Count > 0)
+            {
+                MessageBox.Show("Должность обязательна.");
+                return false;
+            }
+            return true;
+        }
     }
 }

@@ -52,6 +52,7 @@ namespace CompanyManager
             services.AddSingleton<ByteImage>();
             services.AddSingleton<PhotoRepository>();
             services.AddSingleton<EmployeeFilter>();
+            services.AddSingleton<EmployeeDisplayModelConverter>();
             services.AddSingleton<IWindowManager, WindowManager>();
             services.AddSingleton<IViewModelDataService, ViewModelDataService>();
 

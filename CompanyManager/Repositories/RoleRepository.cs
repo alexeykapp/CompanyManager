@@ -11,5 +11,17 @@ namespace CompanyManager.Repositories
                  .AsNoTracking()
                  .ToListAsync();
         }
+        public async Task AddRoleToEmployee(List<Role> roles, Employee employee)
+        {
+            foreach (Role role in roles)
+            {
+                employee.EmployeeRoles.Add(new EmployeeRole
+                {
+                    FkRole = role.IdRole,
+                    FkEmployee = employee.IdEmployee
+                });
+            }
+            await applicationContext.SaveChangesAsync();
+        }
     }
 }

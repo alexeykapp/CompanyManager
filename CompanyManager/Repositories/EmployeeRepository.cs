@@ -1,10 +1,11 @@
-﻿using CompanyManager.Database;
+﻿using CompanyManager.Converters;
+using CompanyManager.Database;
 using CompanyManager.DataBase.DisplayModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace CompanyManager.Repositories
 {
-    public class EmployeeRepository(ApplicationContext applicationContext)
+    public class EmployeeRepository(ApplicationContext applicationContext, EmployeeDisplayModelConverter employeeConverter, RoleRepository roleRepository, PhotoRepository photoRepository)
     {
         public async Task<List<Employee>> GetAsync()
         {
@@ -70,6 +71,13 @@ namespace CompanyManager.Repositories
 
                 applicationContext.Employees.Update(employee);
                 await applicationContext.SaveChangesAsync();
+            }
+            else
+            {
+                var employeeNew = employeeConverter.ConvertToEmployee(employeeModel);
+                await AddAsync(employeeNew);
+                await roleRepository.AddRoleToEmployee(employeeModel.Roles!, employeeNew);
+                await photoRepository.UpdatePhotoAsync(employeeNew.IdEmployee, employeeModel.Photo!);
             }
         }
     }

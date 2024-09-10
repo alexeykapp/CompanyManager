@@ -13,6 +13,9 @@ namespace CompanyManager.Repositories
 
         public async Task UpdatePhotoAsync(int employeeId, byte[] photoBytes)
         {
+            if (photoBytes == null)
+                return;
+
             var photo = await applicationContext.PhotoEmployees
                 .FirstOrDefaultAsync(pe => pe.FkEmployee == employeeId);
 
